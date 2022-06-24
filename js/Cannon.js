@@ -8,12 +8,14 @@ class Cannon {
     this.cannon_image = loadImage("assets/canon.png");
     this.cannon_base = loadImage("assets/cannonBase.png");
   }
+
   display() {
-    if(keyIsDown(RIGHT_ARROW)&&this.angle<70){
-    this.angle+=1;
+    //console.log(this.angle);
+    if(keyIsDown(RIGHT_ARROW) && this.angle<70){
+    this.angle += 0.5;
     }
-    if(keyIsDown(LEFT_ARROW)&&this.angle<-30){
-      this.angle-=1;
+    if(keyIsDown(LEFT_ARROW) && this.angle>-30){
+      this.angle -= 0.5;
       }
 
     push();

@@ -6,8 +6,9 @@ const Constraint = Matter.Constraint;
 
 //variáveis
 var engine, world, backgroundImg;
-var angle=15;
+var angle;
 var canvas, angle, tower, ground, cannon, cannonBall;
+var balls = [];
 
 //variável para a pontuação do jogo
 var pontos = 0;
@@ -24,7 +25,8 @@ function setup() {
   //criar o nosso mundo e o nosso mecanismo de física
   engine = Engine.create();
   world = engine.world;
-  
+  angleMode(DEGREES);
+  angle = 15;
   //opções para os corpos estáticos (parados)
   var options = {
     isStatic: true
@@ -37,8 +39,15 @@ function setup() {
   World.add(world, tower);
   //criando o canhão a partir da classe Cannon
   cannon = new Cannon(180, 110, 130, 100, angle);
-  //criando a bala do canhão a partir da classe CannonBall
-  cannonBall = new CannonBall(cannon.x,cannon.y);
+
+  //matriz de matrizes
+  var m = [1,2,3,4,5];
+  var m2 = [[5,6],['Agatha',"Tatiane"],[9,10]];
+  //         0 1       0        1       0  1
+  //i         0            1              2
+  //console.log(m2[2][1]);
+  //trajetoria = [[x1,y1],[x2,y2],[x3,y3]];
+ 
 }
 
 function draw() {
@@ -54,8 +63,33 @@ function draw() {
   imageMode(CENTER);
   image(towerImage,tower.position.x, tower.position.y, 160, 310);
   pop();
-  //mostrar a bala
-  cannonBall.display();
+
+  //chamada da função para mostrar as balas
+  for(var i=0; i<balls.length; i++){
+    showCannonBalls(balls[i],i);
+  }
+
   //mostrar o canhão
   cannon.display();
+}
+
+function keyReleased(){
+  if(keyCode === DOWN_ARROW){
+    balls[balls.length-1].shoot();
+  }
+}
+
+function keyPressed(){
+  if(keyCode === DOWN_ARROW){
+    //criando a bala do canhão a partir da classe CannonBall
+    cannonBall = new CannonBall(cannon.x,cannon.y);
+    balls.push(cannonBall);
+  }
+}
+
+function showCannonBalls(ball,i){
+  if(ball){
+    //mostrar a bala
+    ball.display();
+  }
 }
