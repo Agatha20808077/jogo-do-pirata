@@ -141,6 +141,7 @@ function collisionWithBoats(index){
       if(collision.collided){
         //chamada da função de remoção dos barcos
 
+        boats[i].remove(i);
         Matter.World.remove(world,balls[index].body);
         delete balls[index];
       }

@@ -24,4 +24,13 @@ class Boat {
     pop();
     
   }
+
+  //função que vai remover os barcos
+  remove(indice) {
+   
+ Matter.World.remove(world, boats[indice].body);
+ delete boats[indice];
+
+
+  }
 }
