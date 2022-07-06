@@ -9,7 +9,7 @@ var engine, world, backgroundImg;
 var angle;
 var canvas, angle, tower, ground, cannon, cannonBall;
 var balls = [];
-var boat;
+var boat, boats = [];
 
 //variável para a pontuação do jogo
 var pontos = 0;
@@ -49,7 +49,7 @@ function setup() {
   //console.log(m2[2][1]);
   //trajetoria = [[x1,y1],[x2,y2],[x3,y3]];
  //criar o corpo do barco a partir da classe Boat
- boat = new Boat(width - 80,- 100, 160, 170);
+ 
 }
 
 function draw() {
@@ -69,13 +69,18 @@ function draw() {
   //chamada da função para mostrar as balas
   for(var i=0; i<balls.length; i++){
     showCannonBalls(balls[i],i);
+    //chamada da função de colisão
+    collisionWithBoats(i);
+
   }
 
   //mostrar o canhão
   cannon.display();
 
-  //mostrar o barco
-  boat.display();
+  //mostrar os barcos
+  showBoats();
+
+ 
 }
 
 function keyReleased(){
@@ -92,9 +97,54 @@ function keyPressed(){
   }
 }
 
+//função para mostrar as bolas
 function showCannonBalls(ball,i){
   if(ball){
     //mostrar a bala
     ball.display();
   }
+}
+
+//função pra mostrar os barcos
+function showBoats(){
+  if(boats.length > 0){
+    if(boats[boats.length-1] === undefined || 
+      boats[boats.length-1].body.position.x < width-400){
+        var positions = [-40,-60,-70,-20];
+        var position = random(positions);
+        boat = new Boat(width - 80,height - 100, 160, 170,position);
+        boats.push(boat);
+      }
+      for(var i=0; i<boats.length; i++){
+        if(boats[i]){
+          Matter.Body.setVelocity(boats[i].body,{
+            x:-1,
+            y:0,
+          });
+
+          //mostrar o barco
+          boats[i].display();
+        }
+      }
+  }
+  else{
+    boat = new Boat(width - 80, height - 100, 160, 170,-100);
+    boats.push(boat);
+  }
+}
+
+//detectar colisão das balas com os barcos
+function collisionWithBoats(index){
+  for(var i=0; i< boats.length; i++){
+    if(balls[index] !== undefined && boats[i] != undefined){
+      var collision = Matter.SAT.collides(balls[index].body, boats[i].body);
+      if(collision.collided){
+        //chamada da função de remoção dos barcos
+
+        Matter.World.remove(world,balls[index].body);
+        delete balls[index];
+      }
+    }
+  }
+
 }
