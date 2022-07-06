@@ -9,6 +9,7 @@ var engine, world, backgroundImg;
 var angle;
 var canvas, angle, tower, ground, cannon, cannonBall;
 var balls = [];
+var boat;
 
 //variável para a pontuação do jogo
 var pontos = 0;
@@ -47,7 +48,8 @@ function setup() {
   //i         0            1              2
   //console.log(m2[2][1]);
   //trajetoria = [[x1,y1],[x2,y2],[x3,y3]];
- 
+ //criar o corpo do barco a partir da classe Boat
+ boat = new Boat(width - 80,- 100, 160, 170);
 }
 
 function draw() {
@@ -71,6 +73,9 @@ function draw() {
 
   //mostrar o canhão
   cannon.display();
+
+  //mostrar o barco
+  boat.display();
 }
 
 function keyReleased(){
