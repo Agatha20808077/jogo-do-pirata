@@ -10,6 +10,9 @@ var angle;
 var canvas, angle, tower, ground, cannon, cannonBall;
 var balls = [];
 var boat, boats = [];
+//animação
+var boatAnimation = [];
+var boatJSON, boatPNG;
 
 //variável para a pontuação do jogo
 var pontos = 0;
@@ -17,6 +20,8 @@ var pontos = 0;
 function preload() {
   backgroundImg = loadImage("./assets/background.gif");
   towerImage = loadImage("./assets/tower.png");
+  boatJSON = loadJSON("assets/boat/boat.json");
+  boatPNG = loadImage("assets/boat/boat.png");
 }
 
 function setup() {
@@ -48,8 +53,14 @@ function setup() {
   //i         0            1              2
   //console.log(m2[2][1]);
   //trajetoria = [[x1,y1],[x2,y2],[x3,y3]];
- //criar o corpo do barco a partir da classe Boat
  
+  //animação
+  var boatFrames = boatJSON.frames;
+  for(var i=0; i<boatFrames.length; i++){
+    var pos = boatFrames[i].position;
+    var img = boatPNG.get(pos.x,pos.y,pos.w,pos.h);
+    boatAnimation.push(img);
+  }
 }
 
 function draw() {
@@ -112,7 +123,7 @@ function showBoats(){
       boats[boats.length-1].body.position.x < width-400){
         var positions = [-40,-60,-70,-20];
         var position = random(positions);
-        boat = new Boat(width - 80,height - 100, 160, 170,position);
+        boat = new Boat(width - 80,height - 100, 160, 170,position, boatAnimation);
         boats.push(boat);
       }
       for(var i=0; i<boats.length; i++){
@@ -124,11 +135,12 @@ function showBoats(){
 
           //mostrar o barco
           boats[i].display();
+          boats[i].animate();
         }
       }
   }
   else{
-    boat = new Boat(width - 80, height - 100, 160, 170,-100);
+    boat = new Boat(width - 80, height - 100, 160, 170,-100, boatAnimation);
     boats.push(boat);
   }
 }
@@ -140,7 +152,6 @@ function collisionWithBoats(index){
       var collision = Matter.SAT.collides(balls[index].body, boats[i].body);
       if(collision.collided){
         //chamada da função de remoção dos barcos
-
         boats[i].remove(i);
         Matter.World.remove(world,balls[index].body);
         delete balls[index];
