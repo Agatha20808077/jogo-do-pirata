@@ -36,7 +36,13 @@ class Boat {
 
   //função que vai remover os barcos
   remove(indice) {
+    this.animation = broken;
+    this.speed = 0.05
+    this.width = 320
+    this.height = 320
+    setTimeout(()=>{
     Matter.World.remove(world, boats[indice].body);
     delete boats[indice];
+    },7000); 
   }
 }

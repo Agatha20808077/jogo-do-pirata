@@ -13,6 +13,8 @@ var boat, boats = [];
 //animação
 var boatAnimation = [];
 var boatJSON, boatPNG;
+var broken = [], brokenboat, json; 
+
 
 //variável para a pontuação do jogo
 var pontos = 0;
@@ -22,6 +24,8 @@ function preload() {
   towerImage = loadImage("./assets/tower.png");
   boatJSON = loadJSON("assets/boat/boat.json");
   boatPNG = loadImage("assets/boat/boat.png");
+  brokenboat = loadImage("assets/boat/broken_boat.png");
+  json = loadJSON("assets/boat/broken_boat.json");
 }
 
 function setup() {
@@ -61,6 +65,16 @@ function setup() {
     var img = boatPNG.get(pos.x,pos.y,pos.w,pos.h);
     boatAnimation.push(img);
   }
+
+  var brokenFrames = json.frames;
+  for(var i=0; i<brokenFrames.length; i++){
+  var pos = brokenFrames[i].position;
+  var img = brokenboat.get(pos.x,pos.y,pos.w,pos.h);
+  broken.push(img);
+  } 
+
+
+
 }
 
 function draw() {
