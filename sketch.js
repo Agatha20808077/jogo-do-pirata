@@ -14,6 +14,11 @@ var boat, boats = [];
 var boatAnimation = [];
 var boatJSON, boatPNG;
 var broken = [], brokenboat, json; 
+var waterSplash = [];
+var waterSplashJSON, waterSplashPNG;
+
+var isGameOver = false;
+var isLaughing = false;
 
 
 //variável para a pontuação do jogo
@@ -26,6 +31,8 @@ function preload() {
   boatPNG = loadImage("assets/boat/boat.png");
   brokenboat = loadImage("assets/boat/broken_boat.png");
   json = loadJSON("assets/boat/broken_boat.json");
+  waterSplashJSON = loadJSON("assets/water_splash/water_splash.json");
+  waterSplashPNG = loadImage("assets/water_splash/water_splash.png");
 }
 
 function setup() {
@@ -58,7 +65,7 @@ function setup() {
   //console.log(m2[2][1]);
   //trajetoria = [[x1,y1],[x2,y2],[x3,y3]];
  
-  //animação
+  //animação do barco
   var boatFrames = boatJSON.frames;
   for(var i=0; i<boatFrames.length; i++){
     var pos = boatFrames[i].position;
@@ -66,6 +73,7 @@ function setup() {
     boatAnimation.push(img);
   }
 
+  //animação do barco quebrado
   var brokenFrames = json.frames;
   for(var i=0; i<brokenFrames.length; i++){
   var pos = brokenFrames[i].position;
@@ -73,7 +81,13 @@ function setup() {
   broken.push(img);
   } 
 
-
+  //animação da bola na água
+  var waterSplashFrames = json.frames;
+  for(var i=0; i<waterSplashFrames.length; i++){
+  var pos = waterSplashFrames[i].position;
+  var img = waterSplashPNG.get(pos.x,pos.y,pos.w,pos.h);
+  waterSplash.push(img);
+  } 
 
 }
 
@@ -127,6 +141,12 @@ function showCannonBalls(ball,i){
   if(ball){
     //mostrar a bala
     ball.display();
+    ball.animate();
+    if((ball.body.position.x >= width && ball.body.position.y >= height-50) || ball.body.position.y >= height-50){
+      if(!ball.isSink){
+        ball.remove(i);
+      }
+    }
   }
 }
 
@@ -142,14 +162,22 @@ function showBoats(){
       }
       for(var i=0; i<boats.length; i++){
         if(boats[i]){
+          //movimentação dos barcos
           Matter.Body.setVelocity(boats[i].body,{
             x:-1,
             y:0,
           });
 
-          //mostrar o barco
+          //mostrar o barco e a animação
           boats[i].display();
           boats[i].animate();
+
+          //colisão do barco com a torre
+          var collision = Matter.SAT.collides(tower,boats[i].body);
+          if(collision.collided && !boats[i].isBroken){
+            gameOver();
+            isGameOver = true;
+          }
         }
       }
   }
@@ -172,5 +200,19 @@ function collisionWithBoats(index){
       }
     }
   }
+}
 
+//fim de jogo com Sweet Alert
+function gameOver(){
+  swal({
+    title: `Fim de jogo!`,
+    text: "Obrigada por jogar!",
+    imageUrl: "https://raw.githubusercontent.com/whitehatjr/PiratesInvasion/main/assets/boat.png",
+    imageSize: "100x100",
+    confirmButtonText: "Jogar Novamente",
+  }, function(isConfirm){
+    if(isConfirm){
+      location.reload();
+    }
+  });
 }

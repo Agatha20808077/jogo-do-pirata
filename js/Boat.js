@@ -10,6 +10,7 @@ class Boat {
     //this.Boat_image = loadImage("assets/boat.png");
     this.animation = boatAnimation;
     this.speed = 0.05;
+    this.isBroken = false;
    }
 
    //função que define a velocidade da animação
@@ -37,6 +38,7 @@ class Boat {
   //função que vai remover os barcos
   remove(indice) {
     this.animation = broken;
+    this.isBroken = true;
     this.speed = 0.05
     this.width = 320
     this.height = 320
