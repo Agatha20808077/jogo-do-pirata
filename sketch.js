@@ -16,6 +16,10 @@ var boatJSON, boatPNG;
 var broken = [], brokenboat, json; 
 var waterSplash = [];
 var waterSplashJSON, waterSplashPNG;
+var somdefundo;
+var explosão;
+var agua;
+var riso;
 
 var isGameOver = false;
 var isLaughing = false;
@@ -33,6 +37,12 @@ function preload() {
   json = loadJSON("assets/boat/broken_boat.json");
   waterSplashJSON = loadJSON("assets/water_splash/water_splash.json");
   waterSplashPNG = loadImage("assets/water_splash/water_splash.png");
+  somdefundo = loadSound("assets/background_music.mp3");
+  explosão = loadSound("assets/cannon_explosion.mp3");
+  agua = loadSound("assets/cannon_water.mp3");
+  riso  = loadSound("assets/pirate_laugh.mp3");
+
+
 }
 
 function setup() {
@@ -95,6 +105,11 @@ function draw() {
 
   //imagem de funda da tela
   image(backgroundImg, 0, 0, width, height);
+  //som de fundo
+  if (!somdefundo.isPlaying()){
+    somdefundo.play()
+    somdefundo.setVolume(0.2)
+  }
   //atualização do mecanismo de física
   Engine.update(engine);
   //mostrar o solo
@@ -125,6 +140,7 @@ function draw() {
 function keyReleased(){
   if(keyCode === DOWN_ARROW){
     balls[balls.length-1].shoot();
+    explosão.play()
   }
 }
 
@@ -145,6 +161,7 @@ function showCannonBalls(ball,i){
     if((ball.body.position.x >= width && ball.body.position.y >= height-50) || ball.body.position.y >= height-50){
       if(!ball.isSink){
         ball.remove(i);
+        agua.play
       }
     }
   }
