@@ -20,6 +20,7 @@ var somdefundo;
 var explosão;
 var agua;
 var riso;
+var pontos = 0;
 
 var isGameOver = false;
 var isLaughing = false;
@@ -41,8 +42,6 @@ function preload() {
   explosão = loadSound("assets/cannon_explosion.mp3");
   agua = loadSound("assets/cannon_water.mp3");
   riso  = loadSound("assets/pirate_laugh.mp3");
-
-
 }
 
 function setup() {
@@ -134,7 +133,12 @@ function draw() {
   //mostrar os barcos
   showBoats();
 
- 
+  //mostrar a pontuação na tela
+  textSize(25);
+  fill("black");
+  text(`Pontuação: ${pontos}`, width - 150, 50);
+  textAlign(CENTER);
+
 }
 
 function keyReleased(){
@@ -161,7 +165,7 @@ function showCannonBalls(ball,i){
     if((ball.body.position.x >= width && ball.body.position.y >= height-50) || ball.body.position.y >= height-50){
       if(!ball.isSink){
         ball.remove(i);
-        agua.play
+        agua.play();
       }
     }
   }
@@ -192,6 +196,10 @@ function showBoats(){
           //colisão do barco com a torre
           var collision = Matter.SAT.collides(tower,boats[i].body);
           if(collision.collided && !boats[i].isBroken){
+            if(!isLaughing && !riso.isPlaying()){
+              riso.play();
+              isLaughing = true;
+            }
             gameOver();
             isGameOver = true;
           }
@@ -214,6 +222,8 @@ function collisionWithBoats(index){
         boats[i].remove(i);
         Matter.World.remove(world,balls[index].body);
         delete balls[index];
+        //contar a pontuação
+        pontos += 3;
       }
     }
   }
